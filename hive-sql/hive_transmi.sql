@@ -51,5 +51,7 @@ FROM transmi_tweets;
 
 -- Compute sentiment
 create or replace view t1 as select id, words from transmi_tweets lateral view explode(sentences(lower(text))) dummy as words;
-create or replace view t2 as select id, word from t1 lateral view explode( words ) dummy as word ;
- 
+create or replace view t3 as select id, words from transmi_tweets lateral view explode(split(lower(text)," ")) dummy as words;
+--create or replace view t2 as select id, word from t1 lateral view explode( words ) dummy as word ;
+ create or replace view t3 as select id,collect_set(word) textvec from t2 group by id;
+

@@ -21,3 +21,8 @@ create table t_feb11 as select * from transmi_simple where ts>=date('2015-02-11'
 --Query de los clientes
 
 select cliente,sum(cuenta) as contador from (select case when lower(source) like '%android%' then 'Android' when source like '%iphone%' or source like '%ipad%' then 'iPhone' when source like '%Windows Phone%' then 'Windows Phon' when source like '%BlackBerry%' then 'BlackBerry' when source like '%Web Client%' then 'Web' when source like '%Facebook%' then 'FBK' when source like '%Mobile Web%' then 'Twitter Mobile' when source like '%transmireporte%' then 'Bot -TransmiReporte' when source like '%TweetDeck%' then 'TweetDeck' else 'Otra vaina' end as cliente,count(*) as cuenta from transmi_tweets group by source) as Q1 group by cliente order by contador;
+
+/home/vramirez/Documents/Lin_Kolcz_SIGMOD2012.pdf
+/home/vramirez/Documents/PracticalMachineLearning.pdf
+
+ select words from t1 join transmi_tweets T on T.id=t1.id where size(words)>1 and text like '%juepu%' limit 10;
