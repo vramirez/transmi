@@ -16,12 +16,10 @@ select cliente,sum(cuenta) as contador from (select case when lower(source) like
 
  select words from t1 join transmi_tweets T on T.id=t1.id where size(words)>1 and text like '%juepu%' limit 10;
 
-
-
 --exploracion que trae las distintas palabras despues de una determinada palabra
 select distinct textvec[find_in_set("hijueputas",concat_ws(",",textvec))] from t3 where array_contains(textvec,"hijueputas");
 
---palabra anterior a servicio
+--palabra anterior a "servicio"
 select palabra,count(*) as cuenta from (select textvec[find_in_set("servicio",concat_ws(",",textvec))-2] as palabra  from t3 where array_contains(textvec,"servicio")) q1 group by palabra order by cuenta;
 
 --la sgte palabra desps d la PALABRA
@@ -30,7 +28,7 @@ select palabra,count(*) as cuenta from (select textvec[find_in_set("servicio",co
 --la sgte palabra despues de "servicio tan"
 select palabra,count(*) as cuenta from (select textvec[find_in_set("servicio",concat_ws(",",textvec))+1] as palabra  from t3 where array_contains(textvec,"servicio") and textvec[find_in_set("servicio",concat_ws(",",textvec))]="tan") q1 group by palabra order by cuenta;
 
---busqueda de una palabra y sus 4 variaciones más utilizadas (bloqueo --> bloqueos, hijueputas --> jueputa,
+--busqueda de una palabra y sus 4 variaciones más utilizadas (bloqueo --> bloqueos, hijueputas --> jueputa...)
 select word,count(*) as cuenta from t2 where word like '%bloque%' group by word order by cuenta desc limit 5;
 select word,count(*) as cuenta from t2 where word like '%gonorr%' group by word order by cuenta desc limit 5;
 select word,count(*) as cuenta from t2 where word like '%servic%' group by word order by cuenta desc limit 5;
@@ -39,4 +37,3 @@ select palabra,count(*) as cuenta from (select textvec[find_in_set("servicio",co
 
 --pre-identificación de adjetivos
 select distinct word from tuits.t2 where (word like '%ado' or word like '%ido' or word like '%ada' or word like '%ida') and (word not like '%\\_%' and word not like '%.%' and word not like '%w%') and length(word)<13 and length(regexp_extract(word,'[a-z]*[0-9]+[a-z]*',0))<=0 order by word
-val query = hctx.sql("select distinct word from tuits.t2 where (word like '%ado' or word like '%ido' or word like '%ada' or word like '%ida') and (word not like '%\\_%' and word not like '%.%' and word not like '%w%') and length(word)<13 and length(regexp_extract(word,'[a-z]*[0-9]+[a-z]*',0))<=0 order by word");

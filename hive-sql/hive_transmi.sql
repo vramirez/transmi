@@ -1,6 +1,4 @@
---ADD JAR json-serde-1.1.6-SNAPSHOT-jar-with-dependencies.jar;
-
---create the tweets_raw table containing the records as received from Twitter
+--tabla external trsnmi_tweets que apunta a todos los tweets disponibles en /data (que a su vez contiene los .json comprimidos o no)
 
 CREATE  TABLE transmi_tweets (
    id BIGINT,
@@ -45,13 +43,12 @@ SELECT
   text  
 FROM transmi_tweets;
 
-
---CREATE OR REPLACE VIEW tweet_time as SELECT id, case when hour(
-
-
 -- Compute sentiment
 create or replace view t1 as select id, words from transmi_tweets lateral view explode(sentences(lower(text))) dummy as words;
 create or replace view t2 as select id, word from t1 lateral view explode( words ) dummy as word ;
 create table t3 as select id,collect_list(word) textvec from t2 group by id;
---create table t4 as select * from t3 where textvec like '%juepu%';
+
+
+create table adj_f1(adjetivos varchar(30));
+LOAD DATA LOCAL INPATH '/tmp/adjetivos.txt' into table adj_f1;
 
