@@ -1,4 +1,4 @@
---tabla external trsnmi_tweets que apunta a todos los tweets disponibles en /data (que a su vez contiene los .json comprimidos o no)
+--tabla external transmi_tweets que apunta a todos los tweets disponibles en /data (que a su vez contiene los .json comprimidos o no)
 
 CREATE  TABLE transmi_tweets (
    id BIGINT,
@@ -41,6 +41,15 @@ SELECT
   lower(user.screen_name) as username,
   cast ( from_unixtime( unix_timestamp(concat( substring(created_at,27,4),' ', substring(created_at,5,15)), 'yyyy MMM dd hh:mm:ss')-18000) as timestamp) ts,
   text  
+FROM transmi_tweets;
+
+-- 
+eCREATE OR REPLACE VIEW transmi_simple_lower AS
+SELECT
+  id,
+  lower(user.screen_name) as username,
+  cast ( from_unixtime( unix_timestamp(concat( substring(created_at,27,4),' ', substring(created_at,5,15)), 'yyyy MMM dd hh:mm:ss')-18000) as timestamp) ts,
+  lower(text)  text
 FROM transmi_tweets;
 
 -- Compute sentiment
