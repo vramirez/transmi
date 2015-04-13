@@ -22,7 +22,7 @@ select word,count(*) as cuenta from t2 where word like '%gonorr%' group by word 
 select word,count(*) as cuenta from t2 where word like '%servic%' group by word order by cuenta desc limit 5;
 
 --tweets con rabia
-select 0,text from tuits.transmi_simple_lower where text like '%:@%' limit 30;
+select 0,text from tuits.transmi_simple_lower where text like '%:@%' or text like '%me emputa%' limit 30;
 
 --tweets de positivos
 select 1,text from tuits.transmi_simple_lower where text like '%me encanta%' or text like '%maravilla%';
