@@ -6,12 +6,18 @@ val htf = new HashingTF(10000)
 import org.apache.spark.sql.hive.HiveContext
 val hctx= new HiveContext(sc)
 val queryneg = hctx.sql("select -1,text from tuits.transmi_simple_lower where text like '%:@%' or text like '%me emputa%'")
-val querypos = hctx.sql("select 1,text from tuits.transmi_simple_lower where text like '%me encanta%' or text like '%maravilla%'")
+val querypos = hctx.sql("select 1,text from tuits.transmi_simple_lower where text like '%encanta%' or text like '%maravilla%'")
 val datapos = querypos.map{line => (line.getInt(0),line.getString(1))}
 val dataneg = queryneg.map{line => (line.getInt(0),line.getString(1))}
 val training = dataneg.union(datapos).map{ text => new LabeledPoint( text._1, htf.transform(text._2.split(" ")))}
-val model = NaiveBayes.train(training)
-model.predict( htf.transform("que mierda montar este transmilenio"))
+//val model = NaiveBayes.train(training)
+//model.predict( htf.transform("que mierda montar este transmilenio"))
+//Calcular efectividad comparando predicciones con la data de training
+val lambada= 0.2
+val model = NaiveBayes.train(training,lambda=lambada)
+val predictionAndLabel = training.map(p => (model.predict(p.features), p.label))
+val accuracy = 1.0 * predictionAndLabel.filter(x => x._1 == x._2).count() / training.count()
+
 //confrontar el modelo con la data
 val queryall = hctx.sql("select text from tuits.transmi_simple_lower")
 val opinions= queryall.map(line => line.getString(0))
