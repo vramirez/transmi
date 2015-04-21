@@ -61,3 +61,6 @@ create table t3 as select id,collect_list(word) textvec from t2 group by id;
 create table adj_f1(adjetivos varchar(30));
 LOAD DATA LOCAL INPATH '/tmp/adjetivos.txt' into table adj_f1;
 
+create table sentims (id bigint, feeling int);
+load data local inpath "/tmp/sentims" into table sentims;
+

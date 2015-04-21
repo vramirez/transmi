@@ -21,10 +21,21 @@ select word,count(*) as cuenta from t2 where word like '%bloque%' group by word 
 select word,count(*) as cuenta from t2 where word like '%gonorr%' group by word order by cuenta desc limit 5;
 select word,count(*) as cuenta from t2 where word like '%servic%' group by word order by cuenta desc limit 5;
 
---tweets con rabia
-select text from tuits.transmi_simple_lower where text like '%:@%' or text like '%me emputa%' limit 30;
+--tweets con rabia o negativos
+select distinct text from tuits.transmi_simple_lower where text like '%:@%' or text like '%me emputa%' or text like '%mal servicio%';
 
 --tweets de positivos
-select text from tuits.transmi_simple_lower where text like '%me encanta%' or text like '%maravilla%';
+select distinct text from tuits.transmi_simple_lower where text like '%me encanta%' or text like '%maravilla%' or text like '%:)%' or text like '%:d' or text like '%:d %' ;
 
+--EXPLORACIÓN
+--Después de la palabra "transmilenio", quito las palabras como "por,para,de,..." con length(palabra)>4
+select palabra,count(*) as cuenta from (select textvec[find_in_set("transmilenio",concat_ws(",",textvec))] as palabra  from t3 where array_contains(textvec,"transmilenio")) q1 where length(palabra)>4 group by palabra order by cuenta;
 
+select palabra,count(*) as cuenta from (select textvec[find_in_set("buen",concat_ws(",",textvec))] as palabra  from t3 where array_contains(textvec,"buen")) q1 group by palabra order by cuenta;
+
+select palabra,count(*) as cuenta from (select textvec[find_in_set("mal",concat_ws(",",textvec))] as palabra  from t3 where array_contains(textvec,"mal")) q1 group by palabra order by cuenta;
+
+--cruce de tuist negativos por hora
+select hour(ts),count(feeling) value from transmi_simple T join sentims S on s.id =t.id where feeling=-1 group by hour(ts) order by value;
+
+--cruce de tuist negativos por hora
