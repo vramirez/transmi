@@ -22,7 +22,7 @@ select word,count(*) as cuenta from t2 where word like '%gonorr%' group by word 
 select word,count(*) as cuenta from t2 where word like '%servic%' group by word order by cuenta desc limit 5;
 
 --tweets con rabia o negativos
-select distinct text from tuits.transmi_simple_lower where text like '%:@%' or text like '%me emputa%' or text like '%mal servicio%';
+select distinct text from tuits.transmi_simple_lower where text like '%:@%' or text like '%me emputa%' or text like '%mal servicio%' or text like '%puta%';
 
 --tweets de positivos
 select distinct text from tuits.transmi_simple_lower where text like '%me encanta%' or text like '%maravilla%' or text like '%:)%' or text like '%:d' or text like '%:d %' ;
@@ -35,7 +35,8 @@ select palabra,count(*) as cuenta from (select textvec[find_in_set("buen",concat
 
 select palabra,count(*) as cuenta from (select textvec[find_in_set("mal",concat_ws(",",textvec))] as palabra  from t3 where array_contains(textvec,"mal")) q1 group by palabra order by cuenta;
 
---cruce de tuist negativos por hora
+--cruce de tuits negativos por hora
 select hour(ts),count(feeling) value from transmi_simple T join sentims S on s.id =t.id where feeling=-1 group by hour(ts) order by value;
 
---cruce de tuist negativos por hora
+--cruce de tuits positivos por hora
+select hour(ts),count(feeling) value from transmi_simple T join sentims S on s.id =t.id where feeling=1 group by hour(ts) order by value;

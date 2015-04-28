@@ -1,6 +1,6 @@
 --tabla external transmi_tweets que apunta a todos los tweets disponibles en /data (que a su vez contiene los .json comprimidos o no)
-
-CREATE  TABLE transmi_tweets (
+--las tablas deben ser creadas desde Hive no desde Spark SQL
+CREATE TABLE transmi_tweets (
    id BIGINT,
    created_at STRING,
    source STRING,
@@ -44,7 +44,7 @@ SELECT
 FROM transmi_tweets;
 
 -- 
-eCREATE OR REPLACE VIEW transmi_simple_lower AS
+CREATE OR REPLACE VIEW transmi_simple_lower AS
 SELECT
   id,
   lower(user.screen_name) as username,
@@ -55,12 +55,13 @@ FROM transmi_tweets;
 -- Compute sentiment
 create or replace view t1 as select id, words from transmi_tweets lateral view explode(sentences(lower(text))) dummy as words;
 create or replace view t2 as select id, word from t1 lateral view explode( words ) dummy as word ;
-create table t3 as select id,collect_list(word) textvec from t2 group by id;
+create or replace view t3 as select id,collect_list(word) textvec from t2 group by id;
 
 
 create table adj_f1(adjetivos varchar(30));
 LOAD DATA LOCAL INPATH '/tmp/adjetivos.txt' into table adj_f1;
 
-create table sentims (id bigint, feeling int);
+create table sentims (id bigint, feeling int) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
+
 load data local inpath "/tmp/sentims" into table sentims;
 
