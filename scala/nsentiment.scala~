@@ -1,15 +1,15 @@
 import org.apache.spark.mllib.clustering.{EMLDAOptimizer, OnlineLDAOptimizer, DistributedLDAModel, LDA}
+import org.apache.spark.mllib.feature.{IDF,HashingTF}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.SparkContext
-import org.apache.spark.mllib.feature.HashingTF
 import scala.collection.mutable
 import org.apache.spark.mllib.linalg.{Vector, Vectors}
 
 val tuits= sqlContext.read.json("/data/*.gz")
 tuits.registerTempTable("tuits")
-val text= sqlContext.sql("select text from tuits where '_corupt_record' is not null and text is not null")
+val text= sqlContext.sql("select lower(text) from tuits where '_corupt_record' is not null and text is not null")
 //cpnvertir 
-val ltext =text.map(x => x.getString(0) ).map(x => x.toLowerCase)
+val ltext =text.map(x => x.getString(0) )
 val tx1 =ltext.map(_.toLowerCase.split("\\s")).map(_.filter(_.length > 3).filter(_.forall(java.lang.Character.isLetter)))
 val tokenized: RDD[Seq[String]] = ltext.map(_.toLowerCase.split("\\s")).map(_.filter(_.length > 3).filter(_.forall(java.lang.Character.isLetter)))
 //Palabras y sus frecuencias. Las más frecuentes primero. 

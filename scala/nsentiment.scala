@@ -45,4 +45,8 @@ topicIndices.foreach { case (terms, termWeights) =>
   }
   println()
 }
+val hashingTF = new HashingTF()
 val tf: RDD[Vector] = hashingTF.transform( tokenized)
+val idf = new IDF().fit(tf)
+//val idf = new IDF(minDocFreq = 2).fit(tf)
+val tfidf: RDD[Vector] = idf.transform(tf)
