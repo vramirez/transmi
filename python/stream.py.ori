@@ -9,10 +9,10 @@ from tweepy import Stream
 
 # See assignment1.html instructions or README for how to get these credentials
 
-api_key = "dhyp6pcBYdkW8KUGS3hOqrz26"
-api_secret = "2E8YhCdTA6RGYRUI6oLJCLDzmahheOwlaI40AgpLK8EbGM7Yrf"
-access_token_key = "17558870-fxmy2cgC4G7huMXbwIHcP9he1sJP2PcISkqHQaIZO"
-access_token_secret = "1u2C6GW6n09kSSxcijd4nbC0nF6ikI9CaZLjoot2dWkD0"
+api_key = "<whatever>"
+api_secret = "<whatever>"
+access_token_key = "<whatever>"
+access_token_secret = "<whatever>"
 filename = "transmi.json"
 day1=datetime.timedelta(days=1)
 tumorrow=datetime.date.today()+day1
