@@ -1,0 +1,57 @@
+import tweepy
+import json
+import jsonpickle
+
+
+#Llaves
+consumer_key = 'dhyp6pcBYdkW8KUGS3hOqrz26'
+consumer_secret = '2E8YhCdTA6RGYRUI6oLJCLDzmahheOwlaI40AgpLK8EbGM7Yrf'
+access_token = '17558870-fxmy2cgC4G7huMXbwIHcP9he1sJP2PcISkqHQaIZO'
+access_token_secret = '1u2C6GW6n09kSSxcijd4nbC0nF6ikI9CaZLjoot2dWkD0'
+
+searchQuery="#Unal"
+tweetsPerQry=100
+tweetCount = 0
+maxTweets =1000
+max_id=-1
+sinceId = None
+fName = 'tweets_20150927.json' 
+auth = tweepy.AppAuthHandler(consumer_key, consumer_secret)
+#auth.set_access_token(access_token, access_token_secret)
+#auth = tweepy.AppAuthHandler(API_KEY, API_SECRET)
+
+api = tweepy.API(auth)
+
+print("Downloading max {0} tweets".format(maxTweets))
+with open(fName, 'w') as f:
+    while tweetCount < maxTweets:
+        try:
+            if (max_id <= 0):
+                if (not sinceId):
+                    new_tweets = api.search(q=searchQuery, count=tweetsPerQry)
+                else:
+                    new_tweets = api.search(q=searchQuery, count=tweetsPerQry,
+                                            since_id=sinceId)
+            else:
+                if (not sinceId):
+                    new_tweets = api.search(q=searchQuery, count=tweetsPerQry,
+                                            max_id=str(max_id - 1))
+                else:
+                    new_tweets = api.search(q=searchQuery, count=tweetsPerQry,
+                                            max_id=str(max_id - 1),
+                                            since_id=sinceId)
+            if not new_tweets:
+                print("No more tweets found")
+                break
+            for tweet in new_tweets:
+                f.write(jsonpickle.encode(tweet._json, unpicklable=False) +
+                        '\n')
+            tweetCount += len(new_tweets)
+            print("Downloaded {0} tweets".format(tweetCount))
+            max_id = new_tweets[-1].id
+        except tweepy.TweepError as e:
+            # Just exit if any error
+            print("some error : " + str(e))
+            break
+ 
+print ("Downloaded {0} tweets, Saved to {1}".format(tweetCount, fName))

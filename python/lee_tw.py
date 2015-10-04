@@ -1,6 +1,8 @@
 import tweepy
 import json
 import jsonpickle
+
+
 #Llaves
 consumer_key = 'dhyp6pcBYdkW8KUGS3hOqrz26'
 consumer_secret = '2E8YhCdTA6RGYRUI6oLJCLDzmahheOwlaI40AgpLK8EbGM7Yrf'
@@ -10,10 +12,10 @@ access_token_secret = '1u2C6GW6n09kSSxcijd4nbC0nF6ikI9CaZLjoot2dWkD0'
 searchQuery="#Unal"
 tweetsPerQry=100
 tweetCount = 0
-maxTweets =1000
+maxTweets =10000
 max_id=-1
 sinceId = None
-fName = 'tweets.json' 
+fName = 'tweets_20150927.json' 
 auth = tweepy.AppAuthHandler(consumer_key, consumer_secret)
 #auth.set_access_token(access_token, access_token_secret)
 #auth = tweepy.AppAuthHandler(API_KEY, API_SECRET)

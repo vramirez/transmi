@@ -1,11 +1,11 @@
 import org.apache.spark.mllib.clustering.{EMLDAOptimizer, OnlineLDAOptimizer, DistributedLDAModel, LDA}
 import org.apache.spark.mllib.feature.{IDF,HashingTF}
 import org.apache.spark.rdd.RDD
-import org.apache.spark.SparkContext
 import scala.collection.mutable
+import org.apache.spark.SparkContext
 import org.apache.spark.mllib.linalg.{Vector, Vectors}
 
-val tuits= sqlContext.read.json("/data/*.gz")
+val tuits= sqlContext.read.json("/home/vramirez/data/*.gz")
 tuits.registerTempTable("tuits")
 val text= sqlContext.sql("select lower(text) from tuits where '_corupt_record' is not null and text is not null")
 //cpnvertir 
@@ -46,7 +46,7 @@ topicIndices.foreach { case (terms, termWeights) =>
   println()
 }
 val hashingTF = new HashingTF()
-val tf: RDD[Vector] = hashingTF.transform( tokenized)
+val tf: RDD[Vector] = hashingTF.transform(tokenized)
 val idf = new IDF().fit(tf)
 //val idf = new IDF(minDocFreq = 2).fit(tf)
 val tfidf: RDD[Vector] = idf.transform(tf)
