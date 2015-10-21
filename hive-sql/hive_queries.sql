@@ -40,3 +40,6 @@ select hour(ts),count(feeling) value from transmi_simple T join sentims S on s.i
 
 --cruce de tuits positivos por hora
 select hour(ts),count(feeling) value from transmi_simple T join sentims S on s.id =t.id where feeling=1 group by hour(ts) order by value;
+
+--promedio de sentiminiento (entre -1 y 1) por cada hora
+select hour(ts),avg(feeling) filin from transmi_simple T join sentims S on s.id=t.id group by hour(ts) order by filin;
