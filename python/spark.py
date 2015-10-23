@@ -20,4 +20,7 @@ stopw=['de', 'en', 'a', 'es', 'los', 'las', 'un', 'unas', 'una', 'por', 'para', 
 #df1.registerTempTable("stopwt")
 ##Un dataframe NO es lo mismo que un RDD
 ndf.rdd.filter(lambda vec: vec[0] not in stopw).take(30)
-
+#Analisis de HTs
+arrh=sqlContext.sql("select entities.hashtags as hashes from tuits where '_corrupt_record' is not null and text is not null and size(entities.hashtags)>0")
+hdd=arrh.select("hashes.text").rdd.flatMap(lambda x:x.text)
+wc1=hdd.map(lambda x:(x,1)).reduceByKey(lambda a, b: a + b)
