@@ -19,8 +19,11 @@ model = NaiveBayes.train(training, lambada)
 
 # Make prediction and test accuracy.
 predictionAndLabel = training.map(lambda p : (model.predict(p.features), p.label))
-accuracy = 1.0 * predictionAndLabel.filter(lambda (x, v): x == v).count() / training.count()
-# model.predict(htf.transform("que dia tan horrible".split(" ")))
+accuracy = 1.0 * predictionAndLabel.filter(lambda x: x[0]== x[1]).count() / training.count()
+#model.predict(htf.transform("que dia tan horrible".split(" ")))
 #model.predict(htf.transform("hola buenos dias".split(" ")))
-#data.select("text").rdd.map(lambda x: x[0].lower()).take(5)
 #Ahora agregar una columna al dataframe "data" con el resultado del sentiment
+sentirdd=data.map(lambda x: (x.id,model.predict(htf.transform(x.text.lower().split(" ")))))
+datafin= data.rdd.join(sentirdd)
+df = datafin.toDF()
+df.printSchema()
