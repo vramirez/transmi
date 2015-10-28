@@ -26,8 +26,10 @@ model = NaiveBayes.train(training, lambada)
 #model.predict(htf.transform("que dia tan horrible".split(" ")))
 #model.predict(htf.transform("hola buenos dias".split(" ")))
 #Ahora agregar una columna al dataframe "data" con el resultado del sentiment
-sentirdd=datanc.map(lambda x: (x.id,model.predict(htf.transform(x.text.lower().split(" ")))))
-fields=[StructField("ids",LongType(),True),StructField("sentiment",StringType(),True)]
+sentirdd=datanc.map(lambda x: (x.id,int(model.predict(htf.transform(x.text.lower().split(" "))))))
+fields=[StructField("ids",LongType(),True),StructField("sentiment",IntegerType(),True)]
 sentidf = sqlContext.createDataFrame(sentirdd, StructType(fields))
-datafin= datanc.join(sentidf, datanc.id == sentidf.ids))
+datafin= datanc.join(sentidf, datanc.id == sentidf.ids)
+
+
 
