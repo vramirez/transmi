@@ -22,7 +22,11 @@ stopw=['de', 'en', 'a', 'es', 'los', 'las', 'un', 'unas', 'una', 'por', 'para', 
 ndf.rdd.filter(lambda vec: vec[0] not in stopw).take(30)
 #Analisis de HTs
 arrh=sqlContext.sql("select entities.hashtags as hashes from tuits where '_corrupt_record' is not null and text is not null and size(entities.hashtags)>0")
+#Los tuiteadores con más followers en ese momento
+q1="select user.screen_name,max(user.followers_count) from tuits group by user.screen_name order by max(user.followers_count) desc"
+#Los que más han tuiteado
+q2="select user.screen_name,count(*) as cuenta from tuits group by user.screen_name order by cuenta desc"
 hdd=arrh.select("hashes.text").rdd.flatMap(lambda x:x.text)
-wc1=hdd.map(lambda x:(x,1)).reduceByKey(lambda a, b: a + b)
+wc1=hdd.map(lambda x:(x.lower(),1)).reduceByKey(lambda a, b: a + b)
 wc1.takeOrdered(20, key=lambda x: -x[1])
 wc2=wc1.sortBy(lambda x: -x[1])
