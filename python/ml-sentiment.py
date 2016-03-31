@@ -4,6 +4,14 @@ from pyspark.ml.feature import HashingTF, Tokenizer,RegexTokenizer
 from pyspark.sql import Row
 from pyspark.sql.functions import hour,date_format
 
+from pyspark import SparkContext
+from pyspark.sql import HiveContext
+
+
+sc = SparkContext("local[*]", "Sentiment Analysis ML")
+sqlContext = HiveContext(sc)
+
+
 data = sqlContext.read.json("../data/*.gz")
 data.registerTempTable("tuits") 
 #0 los tuits negativos, 1 los positivos (según la documentacion no acepta negativos)
@@ -23,4 +31,4 @@ predict=sqlContext.sql("select id,prediction,cast ( from_unixtime( unix_timestam
 predict.registerTempTable("predict2")
 #predict.select("prediction",hour("ts")).groupBy("hour(ts)").count()
 sqlContext.sql("select hour(ts) hora,prediction ,count(*) ntuits from predict2 group by hour(ts),prediction order by hora").show(100)
-#predict.select(hour("ts").alias("hora"),"prediction").groupBy("hora","prediction").count().orderBy("hora").collect()
+#predict.select(hour("ts").alias("hora"),"prediction").groupBy("hora","prediction").count().orderBy("hora").show()
